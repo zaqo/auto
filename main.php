@@ -3,13 +3,13 @@
  MAIN DISPATCH MODULE
 	FORWARD THE REQUEST TO A GIVEN PAGE 
 	OUTPUT:  HTML 
-	23/07/18
-	(c) 2018 TGC-1 project
+	14/09/18
+	(c) 2018 Car maintenance
 */
-require_once 'login_tgc1.php';
+require_once 'login_auto.php';
 
 include ("header.php"); 
-include ("tgc1_funcs.php"); 
+include ("auto_funcs.php"); 
 	//Set up mySQL connection
 			$db_server = mysqli_connect($db_hostname, $db_username,$db_password);
 			$db_server->set_charset("utf8");
@@ -17,7 +17,7 @@ include ("tgc1_funcs.php");
 			mysqli_select_db($db_server,$db_database)or die(mysqli_error($db_server));
 			
 	$dispatch= array(
-		'list' => 'list_users',
+		'list' => 'list_cars',
 		'show' => 'show_user',
 		'trs_all' => 'show_transactions',
 		'trs_log' => 'show_trn_log',
@@ -46,7 +46,7 @@ include ("tgc1_funcs.php");
 		echo "UNKNOW COMMAND IN REQUEST $cmd";
 	
 	
-			$content= '<h1 class="mt-5 ml-5" >Приложение мониторинга активности пользователей</h1><br/><br/>';
+			$content= '<h1 class="mt-5 ml-5" >Header</h1><br/><br/>';
 			$content.= '<small class="mt-2 ml-5">developed by <i>S.Pavlov</i> </small>';
 	mysqli_close($db_server);
 			//Show_page($content);

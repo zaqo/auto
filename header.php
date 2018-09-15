@@ -58,30 +58,28 @@
 						<div class="navbar-nav-scroll">
 							<ul class="navbar-nav bd-navbar-nav flex-row">
 								<li class="nav-item dropdown">
-									<a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="users" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-										Пользователи
+									<a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="cars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+										Авто
 									</a>
-									<div class="dropdown-menu dropdown-menu-right" aria-labelledby="users">
-										<a class="dropdown-item " href="main.php?command=list" title="Users">Перечень</a>
-										<a class="dropdown-item " href="search_profile.php" title="Search">Права доступа</a>
+									<div class="dropdown-menu dropdown-menu-right" aria-labelledby="cars">
+										<a class="dropdown-item " href="main.php?command=list" title="Cars">Перечень</a>
+							
 									</div>
 								</li>
 								<li class="nav-item dropdown">
-									<a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="transactions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-										Транзакции
+									<a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="mileage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+										Пробег
 									</a>
-									<div class="dropdown-menu dropdown-menu-right" aria-labelledby="transactions">
-										<!--<a class="dropdown-item " href="loader_actions.php" title="test">Test</a>-->
-										<a class="dropdown-item " href="main.php?command=trs_all" title="List">Перечень</a>
-										<a class="dropdown-item " href="main.php?command=trs_log" title="All">Отчет</a>
-										
+									<div class="dropdown-menu dropdown-menu-right" aria-labelledby="mileage">
+										<a class="dropdown-item " href="main.php?command=book_km" title="Book">Ввести показания</a>
+										<a class="dropdown-item " href="main.php?command=report_km" title="All">Отчет</a>
 									</div>
 								</li>
 								<li class="nav-item dropdown">
-									<a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="costs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-										Моделирование
+									<a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="services" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+										Услуги
 									</a>
-									<div class="dropdown-menu dropdown-menu-right" aria-labelledby="costs">
+									<div class="dropdown-menu dropdown-menu-right" aria-labelledby="services">
 										<a class="dropdown-item " href="info.php" title="info">Справка</a>
 										<a class="dropdown-item " href="main.php?command=shpz" title="model">ШПЗ -> ПФМ/Фин.позиция</a>
 									</div>
