@@ -18,8 +18,8 @@ include ("auto_funcs.php");
 			
 	$dispatch= array(
 		'list' => 'list_cars',
-		'show' => 'show_user',
-		'trs_all' => 'show_transactions',
+		'show' => 'show_car',
+		'report_fuel' => 'show_fuel_log',
 		'trs_log' => 'show_trn_log',
 		'shpz' => 'select_shpz',
 		'model' => 'model_shpz'
@@ -43,9 +43,10 @@ include ("auto_funcs.php");
 		call_user_func_array($function,$args);
 	}
 	else 
+	{
 		echo "UNKNOW COMMAND IN REQUEST $cmd";
 	
-	
+	}
 			$content= '<h1 class="mt-5 ml-5" >Header</h1><br/><br/>';
 			$content.= '<small class="mt-2 ml-5">developed by <i>S.Pavlov</i> </small>';
 	mysqli_close($db_server);

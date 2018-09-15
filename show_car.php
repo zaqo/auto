@@ -97,9 +97,10 @@
 			$content.= '<ul class="list-group list-group-flush">';
 				$content.= '<li class="list-group-item"><b>Марка:</b> '.$brand.'</li>';
 				$content.= '<li class="list-group-item"><b>Модель:</b> '.$model.'</li>';
+				$content.= '<li class="list-group-item active"><b>Гос.номер:  </b> '.$plate.' | '.$reg.' RUS</li>';
 				$content.= '<li class="list-group-item"><b>VIN:</b> '.$vin.'</li>';
 				$content.= '<li class="list-group-item"><b>Пробег:</b> '.$distance.' '.$mu.'</li>';
-				$content.= '<li class="list-group-item active"><b>Гос.номер:  </b> '.$plate.' | '.$reg.' RUS</li>';
+			
 				/*
 				$content.= '<li class="list-group-item ">
 								<button class="btn list-group-item list-group-item-action d-flex justify-content-between align-items-center" type="button" data-toggle="collapse" data-target="#Toggle" aria-controls="Toggle" aria-expanded="false" aria-label="Info">

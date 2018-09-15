@@ -77,11 +77,11 @@
 								</li>
 								<li class="nav-item dropdown">
 									<a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="services" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-										Услуги
+										Статистика
 									</a>
 									<div class="dropdown-menu dropdown-menu-right" aria-labelledby="services">
-										<a class="dropdown-item " href="info.php" title="info">Справка</a>
-										<a class="dropdown-item " href="main.php?command=shpz" title="model">ШПЗ -> ПФМ/Фин.позиция</a>
+										<a class="dropdown-item " href="main.php?command=report_fuel" title="All">Топливный журнал</a>
+										
 									</div>
 								</li>
 							</ul>
