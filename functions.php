@@ -38,7 +38,7 @@ function Show_page($contents)
 							echo $contents;
 					?>
 				</body>
-				<footer><hr> All rights reserved &#169 2018 </footer>
+				<footer><hr><small> All rights reserved by <i>Magnetosoft</i> &#169  2018</small> </footer>
 			</html>
 <?php
 	}

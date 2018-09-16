@@ -5,8 +5,13 @@
 		14/09/18
 	(c) 2018 Car maintenance project
 */
-// LIST ALL CARS IN THE DATABASE
-function list_cars($db_server) 
+/*
+	LIST ALL CARS IN THE DATABASE
+	deprecated 16/09
+	use list_cars.php instead to select a subject for operations
+ 
+ */
+ function list_cars($db_server) 
 {
 
 		$content="";
@@ -105,9 +110,10 @@ function show_car($db_server,$id)
 		$mu=$row1[1];
 		
 		// Engine Oil
-		$check_eo='SELECT put_on.bookedOn,material_items.name,oil_visc.value,oil_visc.season
+		$check_eo='SELECT put_on.bookedOn,material_items.name,oil_visc.value,oil_visc.season,vendors.name
 							FROM put_on
 							LEFT JOIN material_items ON put_on.item_id=material_items.id
+							LEFT JOIN vendors ON material_items.manuf_by_id=vendors.id
 							LEFT JOIN material_class ON material_items.class_id=material_class.id
 							LEFT JOIN oil_attributes ON material_items.id=oil_attributes.item_id
 							LEFT JOIN oil_visc ON oil_attributes.visc_winter_id=oil_visc.id OR oil_attributes.visc_summer_id=oil_visc.id
@@ -119,6 +125,7 @@ function show_car($db_server,$id)
 		$row2 = mysqli_fetch_row( $answsql_eo );
 		$oil_fill_date=$row2[0];
 		$oil_name=$row2[1];
+		$vendor=$row2[4];
 		if($row2[3]) $oil_summer_visc=$row2[2];
 		else $oil_winter_visc=$row2[2];
 		$row2 = mysqli_fetch_row( $answsql_eo );
@@ -175,8 +182,8 @@ function show_car($db_server,$id)
 				$content.= '<li class="list-group-item"><b>Модель:</b> '.$model.'</li>';
 				$content.= '<li class="list-group-item active"><b>Гос.номер:  </b> '.$plate.' | '.$reg.' RUS</li>';
 				$content.= '<li class="list-group-item"><b>VIN:</b> '.$vin.'</li>';
-				$content.= '<li class="list-group-item"><b>Пробег:</b> '.$distance.' '.$mu.'</li>';
-				$content.= '<li class="list-group-item"><b>Моторное масло:</b> '.$oil_name.' '.$oil_winter_visc.'W - '.$oil_summer_visc.' залито: '.$oil_fill_date.'</li>';
+				$content.= '<li class="list-group-item"><b>Пробег:</b> <i>'.$distance.'</i> '.$mu.'</li>';
+				$content.= '<li class="list-group-item"><b>Моторное масло:</b> '.$vendor.' '.$oil_name.' '.$oil_winter_visc.'W - '.$oil_summer_visc.'<br/><small> заправлено: '.$oil_fill_date.'</small></li>';
 			
 				/* BUTTONS FOR FUTURE USE
 				$content.= '<li class="list-group-item ">
@@ -200,13 +207,20 @@ function show_car($db_server,$id)
 	return;
 	
 }
+/* 
+
+Dumps all fuel records on the screen 
+15/09 
+	- pagination is necessary
+	- by week, by month
+*/
 function show_fuel_log($db_server,$id)
 {
 	
 	$content="";
 		
 			$check_in_mysql="SELECT fuel_journal.qty,fuel_journal.price,fuel_journal.filledOn,
-								locations.name,vendors.name, currency.name,mu.name,locations.address	
+								locations.name,vendors.name, currency.name,mu.name,locations.address,fuel_grades.name	
 							FROM fuel_journal
 							LEFT JOIN locations ON fuel_journal.location_id=locations.id
 							LEFT JOIN vendors ON locations.owner_id=vendors.id
@@ -224,7 +238,7 @@ function show_fuel_log($db_server,$id)
 		$content.= '<div class="">';
 		$content.= '<table class="table table-striped table-hover table-sm ml-3 mr-1 mt-1">';
 		$content.= '<thead>';
-		$content.= '<tr><th>№</th><th>Дата</th><th>АЗС</th><th>Кол-во, литр.</th><th>Цена</th><th>Стоимость</th>
+		$content.= '<tr><th>№</th><th>Дата</th><th>АЗС</th><th>Марка</th><th>Кол-во, литр.</th><th>Цена</th><th>Стоимость</th>
 					</tr>';
 		$content.= '<tbody>';
 		// Iterating through the array
@@ -245,21 +259,230 @@ function show_fuel_log($db_server,$id)
 				
 				$cur_name=$row[5];
 				$mu_name=$row[6];
+				$grade=$row[8];
 				$unit_price=round($price/$qty,2);
-				$content.= '<tr><td>'.$counter.'</td><td>'.$date_set.' </td><td>'.$loc_owner.'<br/><small>'.$loc_name.' | '.$loc_addr.'</small></td><td>'.$qty.'</td>
+				$content.= '<tr><td>'.$counter.'</td><td>'.$date_set.' </td><td>'.$loc_owner.'<br/><small>'.$loc_name.' | '.$loc_addr.'</small></td>
+							<td>'.$grade.'</td><td>'.$qty.'</td>
 							<td><small>'.$unit_price.' '.$cur_name.'</small></td><td>'.$price.' '.$cur_name.'</td></tr>';
 				
 			$counter+=1;
 			$tot_price+=$price;
 			$tot_qty+=$qty;
 		}
-		$content.= '<tr><td> </td><td><b>ИТОГО:</b> </td><td></td><td>'.$tot_qty.' </td>
+		$content.= '<tr><td> </td><td><b>ИТОГО:</b> </td><td></td><td></td><td>'.$tot_qty.' </td>
 							<td></td><td><b>'.$tot_price.' '.$cur_name.'</b></td></tr>';
 				
 		$content.= '</tbody>';
 		$content.= '</table>';
 		$content.= '</div>';
 	//$content="This page is under construction! <br/>";
+	Show_page($content);
+	return;
+}
+/* 
+
+Dumps all mileage records on the screen 
+16/09 
+	- pagination is necessary
+	- by week, by month
+*/
+function show_km_log($db_server,$id)
+{
+	
+	$content="";
+		
+			$check_in_mysql="SELECT road_meter.qty,mu.name,road_meter.bookedOn
+							FROM road_meter
+							LEFT JOIN mu ON road_meter.mu_id=mu.id
+							WHERE road_meter.isValid
+							ORDER by road_meter.bookedOn DESC LIMIT 5";
+					
+					$answsqlcheck=mysqli_query($db_server,$check_in_mysql);
+					if(!$answsqlcheck) die("LOOKUP into services TABLE failed: ".mysqli_error($db_server));
+		// Top of the table
+		
+		
+		// Iterating through the array
+		$counter=0;
+		$rec_prev=0;
+		$isFirst=1;
+		$lastM=0;
+		$format = 'Y-m-d H:i:s';
+		while( $row = mysqli_fetch_row( $answsqlcheck ))  
+		{ 
+				$qty=$row[0];
+				$mu=$row[1];
+				$date_=$row[2];
+				
+				$trn_date = DateTime::createFromFormat($format,$date_);
+				
+				$trn_time=$trn_date->format('H:i:s');
+				$trn_date_cl=$trn_date->format('d-m-y');
+				if($isFirst)
+				{
+					$content.= '<h2>Пробег автомобиля</h2>';
+					$content.= '<div class="">';
+					$content.= '<table class="table table-striped table-hover table-sm ml-3 mr-7 mt-1">';
+					$content.= '<thead>';
+					$content.= '<tr><th>№</th><th>Дата</th><th>Пробег, '.$mu.'</th><th>Итого, '.$mu.'</th></tr>';
+					$content.= '<tbody>';
+						$isFirst=0;
+				
+				}
+				else 
+					$content.= '<tr><td>'.$counter.'</td><td>'.$trn_date_cl.' </td><td>'.number_format(($lastM-$qty),0).'</td><td>'.number_format($lastM,0).'</td>
+							</tr>';
+				
+			$counter+=1;
+			$lastM=$qty;
+		
+		}
+		$content.= '<tr><td>'.$counter.'</td><td>'.$trn_date_cl.' </td><td></td><td>'.number_format($lastM,0).'</td>
+							</tr>';
+		//$content.= '<tr><td> </td><td><b>ИТОГО:</b> </td><td></td><td>'.$tot_qty.' </td>
+		//					<td></td><td><b>'.$tot_price.' '.$cur_name.'</b></td></tr>';
+				
+		$content.= '</tbody>';
+		$content.= '</table>';
+		$content.= '</div>';
+	
+	Show_page($content);
+	return;
+}
+/*
+	INPUT FORM: MILEAGE 
+*/
+
+function book_mileage($db_server,$id)
+{
+	
+	$content="";
+//CHECK the current mileage
+	$check_in_mysql='SELECT qty FROM road_meter 
+						WHERE car_id = '.$id.'  
+						ORDER BY qty DESC LIMIT 1';
+					
+					$answsqlcheck=mysqli_query($db_server,$check_in_mysql);
+					if(!$answsqlcheck) die("LOOKUP into services TABLE failed: ".mysqli_error($db_server));
+		
+		$row = mysqli_fetch_row( $answsqlcheck );
+		$cur_km= $row[0];
+	// Top of the table
+				
+		
+		$content.= '<div class="col-md-8 order-md-1">
+						<h4 class="mb-3 ml-5"></h4>';
+		$content.= '<form id="form" method=post action=book_km.php class="needs-validation" >';
+		$content.='
+					<div class="mb-3">
+						<label for="kms">Введите пробег вашего автомобиля (км):
+						<br/><small><i>последнее показание '.$cur_km.' км </></small>
+						</label>
+							<input type="number" class="form-control" value="" id="kms" name="mileage" min="'.$cur_km.'" max="1999999" step="1" placeholder="1000000" />
+							<div class="invalid-feedback">
+									Введите правильное значение идентификатора.
+							</div>
+					</div>
+					
+					 <hr class="mb-4">
+						<input type="hidden" value="'.$id.'" name="id">
+						<button class="btn btn-primary btn-lg btn-block" type="submit">ВВОД</button>
+					</form>';
+		$content.= '</div>';
+		
+
+	Show_page($content);
+	return;
+}
+/*
+	INPUT FORM: MILEAGE 
+*/
+
+function book_fuel($db_server,$id)
+{
+	
+	$content="";
+	// MAKE UP DROPDOWN ITEMS
+	$select_gr='<SELECT name="grade_id" id="grade_dd" class="form-control" required/>';
+	$select_gr.='<option selected value="" disabled /> ..выберите.. </option>';
+	$check_grades='SELECT id,name FROM fuel_grades
+						WHERE 1  
+						ORDER BY name';
+					
+	$answsql_grades=mysqli_query($db_server,$check_grades);
+	if(!$answsql_grades) die("LOOKUP into fuel_grades TABLE failed: ".mysqli_error($db_server));
+		
+		while($row = mysqli_fetch_row( $answsql_grades ))
+			$select_gr.='<option value="'.$row[0].'">'.$row[1].'</option>';	 
+	$select_gr.='</select>';
+	
+	$select_lc='<SELECT name="loc_id" id="loc_dd" class="form-control" required/>';
+	$select_lc.='<option selected value="" disabled /> ..выберите.. </option>';
+	$check_loc='SELECT id,name, address FROM locations
+						WHERE 1  
+						ORDER BY city_id,address';
+					
+	$answsql_loc=mysqli_query($db_server,$check_loc);
+	if(!$answsql_loc) die("LOOKUP into locations TABLE failed: ".mysqli_error($db_server));
+		
+		while($row = mysqli_fetch_row( $answsql_loc ))
+			$select_lc.='<option value="'.$row[0].'">'.$row[1].' | '.$row[2].'</option>';	 
+	$select_lc.='</select>';
+	// Top of the table
+	
+		$content.= '<div class="col-md-8 order-md-1">
+						<h4 class="mb-3 ml-5"></h4>';
+		$content.= '<form id="form" method=post action=book_gas.php class="needs-validation" >';
+		$content.='
+					
+					<div class="mb-3">
+						<label for="grade">Марка:</label>
+							'.$select_gr.'
+					</div>
+					<div class="mb-3">
+						<label for="price">Стоимость:</label>
+							<input type="number" class="form-control" value="" id="price" name="cost" min="0" max="99999" step="any" placeholder="1000" />
+							<div class="invalid-feedback">
+									Введите правильное значение идентификатора.
+							</div>
+					</div>
+					<div class="mb-3">
+						<label for="qty">Кол-во:</label>
+							<input type="number" class="form-control" value="" id="qty" name="qty" min="0" max="999" step="any" placeholder="100" />
+							<div class="invalid-feedback">
+									Введите правильное значение идентификатора.
+							</div>
+					</div>
+					<div class="mb-3">
+						<label for="grade">АЗС:</label>
+							'.$select_lc.'
+					</div>
+					<div class="mb-3 ">
+						<label class="form-check-label" for="inlineFormInput">Дата:</label>
+							<input type="text" class="form-control mb-2 mr-sm-2 " id="inlineFormInput" value="" name="from" onfocus="this.select();lcs(this)"
+												onclick="event.cancelBubble=true;this.select();lcs(this)" >
+						
+					</div>
+					
+					 <hr class="mb-4">
+						<input type="hidden" value="'.$id.'" name="id">
+						<button class="btn btn-primary btn-lg btn-block " data-container="body" data-toggle="popover" data-placement="top" data-content="Vivamus sagittis" type="submit">ВВОД</button>
+					</form>';
+		$content.= '</div>';
+		/* Just for testing. Clean it pls
+		$content.='<button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Tooltip on top">
+						Tooltip on top
+					</button>
+					<button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="right" title="Tooltip on right">
+						Tooltip on right
+					</button>
+					<button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom">
+						Tooltip on bottom
+					</button>
+					<button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="left" title="Tooltip on left">
+						Tooltip on left
+					</button>';
+		*/
 	Show_page($content);
 	return;
 }
