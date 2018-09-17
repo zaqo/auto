@@ -126,6 +126,8 @@ function show_car($db_server,$id)
 		$oil_fill_date=$row2[0];
 		$oil_name=$row2[1];
 		$vendor=$row2[4];
+		$oil_winter_visc='';
+		$oil_summer_visc='';
 		if($row2[3]) $oil_summer_visc=$row2[2];
 		else $oil_winter_visc=$row2[2];
 		$row2 = mysqli_fetch_row( $answsql_eo );

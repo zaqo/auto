@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Сен 15 2018 г., 16:47
+-- Время создания: Сен 17 2018 г., 13:12
 -- Версия сервера: 10.1.31-MariaDB
 -- Версия PHP: 7.2.4
 
@@ -47,13 +47,14 @@ INSERT INTO `brands` (`id`, `name`) VALUES
 (7, 'VW'),
 (8, 'Toyota'),
 (9, 'Nissan'),
-(10, 'Mitshbishi'),
+(10, 'Mitsubishi'),
 (11, 'GM'),
 (12, 'Rover'),
 (13, 'Fiat'),
 (14, 'SEAT'),
 (15, 'Lada'),
-(16, 'Газ');
+(16, 'Газ'),
+(17, 'noname');
 
 -- --------------------------------------------------------
 
@@ -77,7 +78,9 @@ CREATE TABLE `cars` (
 --
 
 INSERT INTO `cars` (`id`, `vin`, `nick`, `plate`, `region`, `model_id`, `bookedOn`, `isValid`) VALUES
-(1, 'bmbxxlw8w88006652', 'Fifer', 'x980xx', 78, 1, '2018-09-14 09:10:35', 1);
+(1, 'bmbxxlw8w88006652', 'Fifer', 'x980xx', 78, 1, '2018-09-14 09:10:35', 1),
+(6, 'JMBXLCW6W8Z006765', 'MyC', 'e984kb', 60, 4, '2018-09-17 10:49:09', 1),
+(7, 'DEREWSWQ456456633', 'AUDI', 'o343oo', 11, 5, '2018-09-17 11:12:00', 1);
 
 -- --------------------------------------------------------
 
@@ -300,7 +303,10 @@ CREATE TABLE `models` (
 
 INSERT INTO `models` (`id`, `brand_id`, `name`) VALUES
 (1, 1, 'X5'),
-(2, 1, 'X3');
+(2, 1, 'X3'),
+(3, 17, 'noname'),
+(4, 10, 'XL'),
+(5, 2, 'A3');
 
 -- --------------------------------------------------------
 
@@ -445,7 +451,11 @@ CREATE TABLE `road_meter` (
 INSERT INTO `road_meter` (`id`, `car_id`, `qty`, `mu_id`, `bookedOn`, `isValid`) VALUES
 (1, 1, 30000, 1, '2018-09-14 10:28:23', 1),
 (2, 1, 30001, 1, '2018-09-14 10:38:38', 1),
-(3, 1, 30067, 1, '2018-09-15 10:25:58', 1);
+(3, 1, 30067, 1, '2018-09-15 10:25:58', 1),
+(4, 1, 40000, 1, '2018-09-16 10:28:30', 1),
+(5, 1, 45000, 1, '2018-09-16 10:30:36', 1),
+(6, 1, 45073, 1, '2018-09-16 12:50:46', 1),
+(7, 6, 120000, 1, '2018-09-17 10:56:27', 1);
 
 -- --------------------------------------------------------
 
@@ -653,13 +663,13 @@ ALTER TABLE `vendors`
 -- AUTO_INCREMENT для таблицы `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT для таблицы `cars`
 --
 ALTER TABLE `cars`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `city`
@@ -713,7 +723,7 @@ ALTER TABLE `material_items`
 -- AUTO_INCREMENT для таблицы `models`
 --
 ALTER TABLE `models`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT для таблицы `mu`
@@ -749,7 +759,7 @@ ALTER TABLE `put_on`
 -- AUTO_INCREMENT для таблицы `road_meter`
 --
 ALTER TABLE `road_meter`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `service_class`
