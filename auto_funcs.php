@@ -73,7 +73,9 @@ function show_car($db_server,$id)
 {
 
 		$content="";
-		$oil_mess=' - ';
+		$oil_m=' - ';
+		$mileage_m=' - ';
+		$distance=0;
 		$image_path='/auto/src/AIRLINE.jpg';
 	
 			
@@ -140,8 +142,9 @@ function show_car($db_server,$id)
 		
 		//Oil compartment
 		if($oil_fill_date)
-			$oil_mess=$vendor.' '.$oil_name.' '.$oil_winter_visc.'W - '.$oil_summer_visc.'<br/><small> заправлено: '.$oil_fill_date.'</small>';
-		
+			$oil_m=$vendor.' '.$oil_name.' '.$oil_winter_visc.'W - '.$oil_summer_visc.'<br/><small> заправлено: '.$oil_fill_date.'</small>';
+		if($distance)
+			$mileage_m='<i>'.$distance.'</i> '.$mu;
 		  //=====================================//
 		 //			ACTIONS SECTION			    //
 		//-------------------------------------//
@@ -192,8 +195,8 @@ function show_car($db_server,$id)
 				$content.= '<li class="list-group-item"><b>Модель:</b> '.$model.'</li>';
 				$content.= '<li class="list-group-item active"><b>Гос.номер:  </b> '.$plate.' | '.$reg.' RUS</li>';
 				$content.= '<li class="list-group-item"><b>VIN:</b> '.$vin.'</li>';
-				$content.= '<li class="list-group-item"><b>Пробег:</b> <i>'.$distance.'</i> '.$mu.'</li>';
-				$content.= '<li class="list-group-item"><b>Моторное масло:</b> '.$oil_mess.'</li>';
+				$content.= '<li class="list-group-item"><b>Пробег:</b> '.$mileage_m.'</li>';
+				$content.= '<li class="list-group-item"><b>Моторное масло:</b> '.$oil_m.'</li>';
 			
 				/* BUTTONS FOR FUTURE USE
 				$content.= '<li class="list-group-item ">
