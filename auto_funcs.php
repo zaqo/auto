@@ -73,6 +73,7 @@ function show_car($db_server,$id)
 {
 
 		$content="";
+		$oil_mess=' - ';
 		$image_path='/auto/src/AIRLINE.jpg';
 	
 			
@@ -128,12 +129,19 @@ function show_car($db_server,$id)
 		$vendor=$row2[4];
 		$oil_winter_visc='';
 		$oil_summer_visc='';
+		
 		if($row2[3]) $oil_summer_visc=$row2[2];
 		else $oil_winter_visc=$row2[2];
 		$row2 = mysqli_fetch_row( $answsql_eo );
+		
 		if($row2[3]) $oil_summer_visc=$row2[2];
 		else $oil_winter_visc=$row2[2];
 		$mu=$row1[1];
+		
+		//Oil compartment
+		if($oil_fill_date)
+			$oil_mess=$vendor.' '.$oil_name.' '.$oil_winter_visc.'W - '.$oil_summer_visc.'<br/><small> заправлено: '.$oil_fill_date.'</small>';
+		
 		  //=====================================//
 		 //			ACTIONS SECTION			    //
 		//-------------------------------------//
@@ -177,7 +185,7 @@ function show_car($db_server,$id)
 		$content.= '<div class="row">
 						<div class="col-sm-6">';
 		$content.= '<div class="card mt-3 ml-3"  style="max-width: 28rem;">
-						<div class="card-header"><h5 class="card-title"> # '.$id.' | '.$nick.'</h5></div>';
+						<div class="card-header"><h5 class="card-title"> <i>pseudo</i>  | '.$nick.'</h5></div>';
 		$content.= '<div class="card-body">';					
 			$content.= '<ul class="list-group list-group-flush">';
 				$content.= '<li class="list-group-item"><b>Марка:</b> '.$brand.'</li>';
@@ -185,7 +193,7 @@ function show_car($db_server,$id)
 				$content.= '<li class="list-group-item active"><b>Гос.номер:  </b> '.$plate.' | '.$reg.' RUS</li>';
 				$content.= '<li class="list-group-item"><b>VIN:</b> '.$vin.'</li>';
 				$content.= '<li class="list-group-item"><b>Пробег:</b> <i>'.$distance.'</i> '.$mu.'</li>';
-				$content.= '<li class="list-group-item"><b>Моторное масло:</b> '.$vendor.' '.$oil_name.' '.$oil_winter_visc.'W - '.$oil_summer_visc.'<br/><small> заправлено: '.$oil_fill_date.'</small></li>';
+				$content.= '<li class="list-group-item"><b>Моторное масло:</b> '.$oil_mess.'</li>';
 			
 				/* BUTTONS FOR FUTURE USE
 				$content.= '<li class="list-group-item ">
@@ -221,7 +229,7 @@ function show_fuel_log($db_server,$id)
 	
 	$content="";
 		
-			$check_in_mysql="SELECT fuel_journal.qty,fuel_journal.price,fuel_journal.filledOn,
+			$check_in_mysql='SELECT fuel_journal.qty,fuel_journal.price,fuel_journal.filledOn,
 								locations.name,vendors.name, currency.name,mu.name,locations.address,fuel_grades.name	
 							FROM fuel_journal
 							LEFT JOIN locations ON fuel_journal.location_id=locations.id
@@ -229,8 +237,8 @@ function show_fuel_log($db_server,$id)
 							LEFT JOIN currency ON fuel_journal.cur_id=currency.id
 							LEFT JOIN mu ON fuel_journal.mu_id=mu.id
 							LEFT JOIN fuel_grades ON fuel_journal.grade_id=fuel_grades.id
-							WHERE fuel_journal.isValid
-							ORDER by fuel_journal.filledOn ";
+							WHERE fuel_journal.isValid AND car_id="'.$id.'"
+							ORDER by fuel_journal.filledOn ';
 					
 					$answsqlcheck=mysqli_query($db_server,$check_in_mysql);
 					if(!$answsqlcheck) die("LOOKUP into services TABLE failed: ".mysqli_error($db_server));
@@ -249,6 +257,7 @@ function show_fuel_log($db_server,$id)
 		$isFirst=1;
 		$tot_price=0;
 		$tot_qty=0;
+		$cur_name='';
 		while( $row = mysqli_fetch_row( $answsqlcheck ))  
 		{ 
 				$qty=$row[0];
@@ -271,13 +280,16 @@ function show_fuel_log($db_server,$id)
 			$tot_price+=$price;
 			$tot_qty+=$qty;
 		}
+		
 		$content.= '<tr><td> </td><td><b>ИТОГО:</b> </td><td></td><td></td><td>'.$tot_qty.' </td>
 							<td></td><td><b>'.$tot_price.' '.$cur_name.'</b></td></tr>';
 				
 		$content.= '</tbody>';
 		$content.= '</table>';
 		$content.= '</div>';
-	//$content="This page is under construction! <br/>";
+		if(!$tot_qty)
+			$content	= info_message('РАСХОДОВ НЕ ЗАРЕГИСТРИРОВАНО:','');
+//$content="This page is under construction! <br/>";
 	Show_page($content);
 	return;
 }
@@ -287,17 +299,18 @@ Dumps all mileage records on the screen
 16/09 
 	- pagination is necessary
 	- by week, by month
+	22.09.18
 */
 function show_km_log($db_server,$id)
 {
 	
 	$content="";
 		
-			$check_in_mysql="SELECT road_meter.qty,mu.name,road_meter.bookedOn
+			$check_in_mysql='SELECT road_meter.qty,mu.name,road_meter.bookedOn
 							FROM road_meter
 							LEFT JOIN mu ON road_meter.mu_id=mu.id
-							WHERE road_meter.isValid
-							ORDER by road_meter.bookedOn DESC LIMIT 5";
+							WHERE road_meter.isValid AND car_id="'.$id.'"
+							ORDER by road_meter.bookedOn DESC LIMIT 10';
 					
 					$answsqlcheck=mysqli_query($db_server,$check_in_mysql);
 					if(!$answsqlcheck) die("LOOKUP into services TABLE failed: ".mysqli_error($db_server));
@@ -310,6 +323,7 @@ function show_km_log($db_server,$id)
 		$isFirst=1;
 		$lastM=0;
 		$format = 'Y-m-d H:i:s';
+		$trn_date_cl='';
 		while( $row = mysqli_fetch_row( $answsqlcheck ))  
 		{ 
 				$qty=$row[0];
@@ -339,8 +353,14 @@ function show_km_log($db_server,$id)
 			$lastM=$qty;
 		
 		}
-		$content.= '<tr><td>'.$counter.'</td><td>'.$trn_date_cl.' </td><td></td><td>'.number_format($lastM,0).'</td>
+		if ($lastM)
+			$content.= '<tr><td>'.$counter.'</td><td>'.$trn_date_cl.' </td><td></td><td>'.number_format($lastM,0).'</td>
 							</tr>';
+		else
+			$content.= info_message('НЕТ ПОКАЗАНИЙ:','');/*'<div class="alert alert-primary mt-5 ml-5 mr-5" role="alert">
+										<h5>НЕТ ПОКАЗАНИЙ:</h5>
+						</div>';
+		*/
 		//$content.= '<tr><td> </td><td><b>ИТОГО:</b> </td><td></td><td>'.$tot_qty.' </td>
 		//					<td></td><td><b>'.$tot_price.' '.$cur_name.'</b></td></tr>';
 				
@@ -350,6 +370,21 @@ function show_km_log($db_server,$id)
 	
 	Show_page($content);
 	return;
+}
+/*
+	Makes up a messge for the user screen
+	INPUT:
+		- $header - message's header
+		- $body	-	messages main text
+	OUTPUT
+		- HTML 
+*/
+function info_message($header,$body)
+{
+	return '<div class="alert alert-primary mt-5 ml-5 mr-5" role="alert">
+										<h5>'.$header.'</h5>
+										<br/>'.$body.'<br/>
+						</div>';
 }
 /*
 	INPUT FORM: MILEAGE 
