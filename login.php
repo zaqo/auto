@@ -6,6 +6,8 @@
 */
  include ("header.php"); 
  include ("login_auto.php"); 
+if(isset($_GET['command'])) 		$command 	= $_GET['command'];
+else $command=FALSE;
 	
 	$db_server = mysqli_connect($db_hostname, $db_username,$db_password);
 		$db_server->set_charset("utf8");
@@ -13,7 +15,9 @@
 		mysqli_select_db($db_server,$db_database)or die(mysqli_error($db_server));
 		
 $content="";
-	
+$error='';
+if($command)
+	$error='Неправильное значение комбинации: имя пользователя + пароль';
 	// Top of the FORM
 	
 		$content.= '<div class="col-md-8 order-md-1">
@@ -22,15 +26,15 @@ $content="";
 		$content.='
 					<div class="mb-3">
 						<label for="qty">Имя пользователя:</label>
-							<input type="text" class="form-control" value="" id="userid" name="userid" minlength="3" maxlength="12" placeholder="AtLeast_6" required />
-							<div class="invalid-feedback">
-									Введите правильное значение идентификатора.
+							<input type="text" class="form-control" value="" id="userid" name="userid" minlength="3" maxlength="12" placeholder="UserID" required />
+							<div class="invalidElem">
+									'.$error.'
 							</div>
 					</div>
 					
 					<div class="mb-3">
-						<label for="price">Pass:</label>
-							<input type="password" class="form-control" value="" id="pass" name="pass" minlength="6" maxlength="17" pattern="[A-Z\d]{,6}$" />
+						<label for="price">Пароль:</label>
+							<input type="password" class="form-control" value="" id="pass" name="pass" minlength="6" maxlength="10"  />
 							<div class="invalid-feedback">
 									Введите правильное значение идентификатора.
 							</div>

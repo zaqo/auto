@@ -34,8 +34,8 @@
 		}
 		else
 		{
-			echo "ERROR: WRONG INPUT DATA FROM THE FORM: name - $name | password - $pass";
-			//echo '<script>history.go(-1);</script>';
+			//echo "ERROR: WRONG INPUT DATA FROM THE FORM: name - $name | password - $pass";
+			echo '<script>window.location.replace("login.php?command=1");</script>';
 		}
 			
 // reconstruct user screen	
