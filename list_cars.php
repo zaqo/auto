@@ -8,19 +8,27 @@
 require_once 'login_auto.php';
 
 include ("header.php"); 
+
+if(isset($_SESSION['dude'])) 		$userid 	= $_SESSION['dude'];
+else
+{	
+
+	die("Please login");
+}
 	$db_server = mysqli_connect($db_hostname, $db_username,$db_password);
 		$db_server->set_charset("utf8");
 		If (!$db_server) die("Can not connect to a database!!".mysqli_connect_error($db_server));
 		mysqli_select_db($db_server,$db_database)or die(mysqli_error($db_server));
-$content="";
+
+		$content="";
 		
-			$check_in_mysql="SELECT cars.id,cars.vin,cars.nick,cars.plate,cars.region,
+			$check_in_mysql='SELECT cars.id,cars.vin,cars.nick,cars.plate,cars.region,
 								brands.name,models.name
 							FROM cars
 							LEFT JOIN models ON cars.model_id=models.id
 							LEFT JOIN brands ON models.brand_id=brands.id
-							WHERE 1
-							ORDER by cars.id ";
+							WHERE user_id="'.$userid.'"
+							ORDER by cars.id ';
 					
 					$answsqlcheck=mysqli_query($db_server,$check_in_mysql);
 					if(!$answsqlcheck) die("LOOKUP into services TABLE failed: ".mysqli_error($db_server));

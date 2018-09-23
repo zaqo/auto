@@ -10,8 +10,16 @@ require_once 'login_auto.php';
 
 include ("header_short.php"); 
 include ("auto_funcs.php"); 
+session_start();
 if(isset($_REQUEST['id'])) 			$id		= $_REQUEST['id'];
 else $id=0;
+if(isset($_SESSION['dude'])) 		$userid 	= $_SESSION['dude'];
+		else
+	{	
+
+		die("Please login");
+	}
+
 //HEADER SECTION
 $nav_bar_pc= ' <header class="navbar navbar-expand navbar-grey flex-column flex-md-row bd-navbar ">
 						<a class="navbar-brand mr-0 mr-md-2" href="/auto/" aria-label="Auto">
@@ -169,7 +177,7 @@ $nav_bar_mobile= '
 								</ul>
 							</div>
 						</nav> ';
-				echo $nav_bar_mobile;
+				//echo $nav_bar_mobile;
 	//Set up mySQL connection
 			$db_server = mysqli_connect($db_hostname, $db_username,$db_password);
 			$db_server->set_charset("utf8");
@@ -183,6 +191,7 @@ $nav_bar_mobile= '
 		'report_km' => 'show_km_log',
 		'book_km' => 'book_mileage',
 		'book_gas' => 'book_fuel',
+		'new_car' => 'new_car'
 	);
 	
 	$cmd=(isset($_REQUEST['command']) ? $_REQUEST['command'] : '');
