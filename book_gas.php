@@ -13,8 +13,7 @@
 	if(isset($_REQUEST['grade_id'])) 	$grade	= $_REQUEST['grade_id'];
 	if(isset($_REQUEST['loc_id'])) 		$location	= $_REQUEST['loc_id'];
 	
-	$date_fr=substr($date_,-4).substr($date_,3,2).substr($date_,0,2);
-	var_dump($_REQUEST);
+	//var_dump($_REQUEST);
 	
 	$db_server = mysqli_connect($db_hostname, $db_username,$db_password);
 		$db_server->set_charset("utf8");
@@ -25,7 +24,7 @@
 		{
 			$textsql_insert='INSERT INTO fuel_journal
 						(car_id,qty,mu_id,price,cur_id,location_id,grade_id,filledOn,isValid)
-						VALUES( "'.$id.'","'.$qty.'",3,"'.$cost.'",1,"'.$location.'", "'.$grade.'", "'.$date_fr.'",1)';
+						VALUES( "'.$id.'","'.$qty.'",3,"'.$cost.'",1,"'.$location.'", "'.$grade.'", "'.$date_.'",1)';
 			// MU only liters now
 			$answsql=mysqli_query($db_server,$textsql_insert);
 			if(!$answsql) die("fuel_journal table UPDATE failed: ".mysqli_error($db_server));
@@ -39,7 +38,7 @@
 		
 // reconstruct user screen	
 // ? make redirect to main.php show
-echo '<script>history.go(-2);</script>';			
+echo '<script>window.location.replace("main.php?command=show&id='.$id.'");</script>';			
 	
 	
 mysqli_close($db_server);

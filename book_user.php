@@ -34,7 +34,7 @@
 		
 // reconstruct user screen	
 // ? make redirect to main.php show
-echo '<script>window.location.replace("main.php?command=list&id='.$new_id.'");</script>';			
+echo '<script>window.location.replace("login.php");</script>';			
 	
 	
 mysqli_close($db_server);

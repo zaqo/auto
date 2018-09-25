@@ -46,7 +46,7 @@
 		
 // reconstruct user screen	
 // ? make redirect to main.php show
-	echo '<script>history.go(-2);</script>';			
+	echo '<script>window.location.replace("main.php?command=show&id='.$id.'");</script>';			
 		
 	
 mysqli_close($db_server);

@@ -43,7 +43,7 @@ $content="";
 					</div>
 					
 					<div class="mb-3">
-						<label for="pass">Pass:</label>
+						<label for="pass">Пароль:</label>
 							<input type="password" class="form-control" value="" id="pass" name="pass" minlength="6" maxlength="17" pattern="[A-Z\d]{,6}$" />
 							<div class="invalid-feedback">
 									Введите правильное значение идентификатора.
