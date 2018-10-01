@@ -17,7 +17,7 @@ else $command=FALSE;
 $content="";
 $error='';
 if($command)
-	$error='Неправильное значение комбинации: имя пользователя + пароль';
+	$error='Неправильное имя пользователя + пароль';
 	// Top of the FORM
 	
 		$content.= '<div class="col-md-8 order-md-1">
