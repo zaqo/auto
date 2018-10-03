@@ -14,10 +14,10 @@ session_start();
 if(isset($_REQUEST['id'])) 			$id		= $_REQUEST['id'];
 else $id=0;
 if(isset($_SESSION['dude'])) 		$userid 	= $_SESSION['dude'];
-		else
+else
 	{	
 
-		die("Please login");
+		echo '<script>window.location.replace("login.php?command=1");</script>';
 	}
 
 //HEADER SECTION
@@ -29,7 +29,7 @@ if(isset($_SESSION['dude'])) 		$userid 	= $_SESSION['dude'];
 			mysqli_select_db($db_server,$db_database)or die(mysqli_error($db_server));
 			
 	$dispatch= array(
-		'list' => 'list_cars',
+		'list' => 'list_cars_cards',
 		'show' => 'show_car',
 		'report_fuel' => 'show_fuel_log_card',
 		'report_km' => 'show_km_log_card',
@@ -41,7 +41,7 @@ if(isset($_SESSION['dude'])) 		$userid 	= $_SESSION['dude'];
 	$cmd=(isset($_REQUEST['command']) ? $_REQUEST['command'] : '');
 	$id=(isset($_REQUEST['id']) ? $_REQUEST['id'] : '');
 	 
-	$args=array($db_server,$id);
+	$args=array($db_server,$id,$userid);
 	
 	if(array_key_exists($cmd,$dispatch))
 	{
