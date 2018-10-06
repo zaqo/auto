@@ -81,14 +81,14 @@ function list_cars_cards($db_server,$userid)
 							LEFT JOIN models ON cars.model_id=models.id
 							LEFT JOIN brands ON models.brand_id=brands.id
 							WHERE user_id="'.$userid.'"
-							ORDER by cars.id ';
+							ORDER by brands.id,models.name ';
 					
 					$answsqlcheck=mysqli_query($db_server,$check_in_mysql);
 					if(!$answsqlcheck) die("LOOKUP into services TABLE failed: ".mysqli_error($db_server));
 		// Top of the table
 		
 		
-		$content.= '<div class="card mt-5 ml-5" style="width: 28rem;">';
+		$content.= '<div class="card mt-3 ml-5" style="width: 28rem;">';
 		$content.= '<div class="card-header">У вас в гараже</div>';
 		
 		$content.= ' <ul class="list-group list-group-flush">';
@@ -962,7 +962,7 @@ function entry_menu_maker($id)
 {
 	return '<nav class="navbar navbar-expand-md bg-dark navbar-dark">
 						<!-- Brand -->
-						<a class="navbar-brand mr-0 mr-md-2" href="'.$_SERVER['HTTP_REFERER'].'" aria-label="Auto" name="List">
+						<a class="navbar-brand mr-0 mr-md-2" href="login.php" aria-label="Auto" name="List">
 						<svg version="1.1" id="Car_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="98.54px" height="98.54px" viewBox="0 0 98.54 98.54" style="enable-background:new 0 0 98.54 98.54;" xml:space="preserve">
 <g>

@@ -33,8 +33,8 @@ if($command)
 					</div>
 					
 					<div class="mb-3">
-						<label for="price">Пароль:</label>
-							<input type="password" class="form-control" value="" id="pass" name="pass" minlength="6" maxlength="10"  />
+						<label for="pass">Пароль: </label>
+							<input type="password" class="form-control" value="" id="pass" name="pass" minlength="6" maxlength="20"  />
 							<div class="invalid-feedback">
 									Введите правильное значение идентификатора.
 							</div>

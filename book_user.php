@@ -4,7 +4,7 @@
 			17/09/18		
 */
  include ("login_auto.php"); 
-	
+include ("header.php"); 
 	if(isset($_REQUEST['username'])) 		$name 	= $_REQUEST['username'];
 	if(isset($_REQUEST['pass'])) 		$pass 	= $_REQUEST['pass'];
 	if(isset($_REQUEST['email'])) 		$email	= $_REQUEST['email'];
@@ -32,9 +32,12 @@
 		}
 		$new_id=mysqli_insert_id($db_server);
 		
-// reconstruct user screen	
-// ? make redirect to main.php show
-echo '<script>window.location.replace("login.php");</script>';			
+
+echo '<div class="alert alert-primary mt-5 ml-5 mr-5" role="alert">
+										<h5>ВАША УЧЕТНАЯ ЗАПИСЬ ЗАРЕГИСТРИРОВАНА!</h5>
+										<br/>Для продолжения работы войдите на <a href="login.php"> сайт</a><br/>
+						</div>';
+			
 	
 	
 mysqli_close($db_server);
